@@ -1,6 +1,6 @@
 import AppRoutes from "./Routes/Routes"
 import { Todos } from "./Components/todo"
-import { createContext, useState } from "react"
+import { createContext, useContext, useState } from "react"
 export default function App() {
 
 
@@ -20,9 +20,35 @@ const UserContext = createContext();
 function UserProvider({children}) {
   const [username, setUsername] = useState("JS");
 
-  <UserContext.Provider>
+  return (<UserContext.Provider value={{
+    username, setUsername
+  }}>
     {children}
-  </UserContext.Provider>
+  </UserContext.Provider> )
+}
+
+export function AppContextMain() {
+
+  return (
+    <UserProvider>
+      <Parent />
+    </UserProvider>
+  )
+}
+
+function Parent() {
+
+  return (
+    <Child/>
+  )
+}
+
+function Child() {
+  const {username, setUsername} = useContext(UserContext);
+
+  return (
+    <input value={username} onInput={(event) => setUsername(event.target.value)} />
+  )
 }
 
 export function AppMain() {
